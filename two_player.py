@@ -13,8 +13,7 @@ args = parser.parse_args()
 
 pygame.init()
 
-
-TOTAL_TIME = args.time if args.time else 10 * 60  
+TOTAL_TIME = args.time if args.time else 10 * 60
 
 pieces = {}
 piece_files = {

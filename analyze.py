@@ -1,13 +1,14 @@
 import pygame
 import chess
-import chess.engine
 import time
 from constants import *
 from draw import draw_board, draw_pieces, draw_highlights, draw_button, draw_analysis
 
+import chess.engine
+
 pygame.init()
 
-
+# Load piece images
 pieces = {}
 piece_files = {
     'p': 'black_pawn.png',
@@ -26,12 +27,15 @@ piece_files = {
 for piece, filename in piece_files.items():
     pieces[piece] = pygame.image.load(f'images/{filename}')
 
+# Initialize chess board
 board = chess.Board()
 
+# Set up fonts
 font = pygame.font.Font(None, 36)
 info_font = pygame.font.Font(None, 28)
 
 def request_analysis(board):
+    # Request analysis from chess engine
     with chess.engine.SimpleEngine.popen_uci(PATH_TO_ENGINE) as engine:
         result = engine.analyse(board, chess.engine.Limit(depth=30))
         evaluation = result['score'].relative.score(mate_score=10000)
@@ -46,9 +50,11 @@ def request_analysis(board):
         return evaluation, ' '.join(best_line)
 
 def main():
+    # Set up game window
     screen = pygame.display.set_mode((WIDTH, HEIGHT + BUTTON_HEIGHT + INFO_HEIGHT), pygame.RESIZABLE)
-    pygame.display.set_caption("2-Player Chess with Analysis")
+    pygame.display.set_caption("Chess with Analysis")
 
+    # Set up button
     button_rect = pygame.Rect((WIDTH // 2 - 100, HEIGHT + 10, 200, 30))
     button_text = font.render('Request Analysis', True, BUTTON_TEXT_COLOR)
     
@@ -79,6 +85,7 @@ def main():
             elif event.type == pygame.VIDEORESIZE:
                 screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
 
+        # Draw game elements
         draw_board(screen)
         draw_highlights(screen, board, selected_square)
         draw_pieces(screen, board, pieces)
